@@ -95,11 +95,20 @@ class MinimalMOSDACChatbot:
 
     def setup_neo4j(self):
         """Setup Neo4j connection with error handling"""
+        # Skip Neo4j setup for minimal deployment
+        neo4j_enabled = os.getenv('NEO4J_ENABLED', 'false').lower() == 'true'
+        
+        if not neo4j_enabled:
+            logger.info("ℹ️ Neo4j disabled for minimal deployment")
+            self.driver = None
+            return
+            
         try:
             neo4j_uri = os.getenv('NEO4J_URI', 'neo4j://localhost:7687')
             neo4j_user = os.getenv('NEO4J_USER', 'neo4j')
             neo4j_password = os.getenv('NEO4J_PASSWORD', 'password')
             
+            logger.info(f"🔌 Attempting Neo4j connection to: {neo4j_uri}")
             self.driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
             
             # Test connection
