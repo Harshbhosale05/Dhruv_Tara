@@ -8,12 +8,26 @@ import os
 import json
 import logging
 import numpy as np
-import faiss
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 import google.generativeai as genai
 from neo4j import GraphDatabase
+
+# Add error handling for missing dependencies
+try:
+    import faiss
+    FAISS_AVAILABLE = True
+except ImportError:
+    FAISS_AVAILABLE = False
+    logger.warning("FAISS not available - vector search will be disabled")
+
+try:
+    from sentence_transformers import SentenceTransformer
+    SENTENCE_TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    SENTENCE_TRANSFORMERS_AVAILABLE = False
+    logger.warning("Sentence Transformers not available - will use simpler embeddings")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -104,10 +118,8 @@ class EnhancedHybridMOSDACChatbot:
         """Search using enhanced RAG (vector search)"""
         try:
             # Use SentenceTransformer for query embedding (matching the stored embeddings)
-            try:
-                from sentence_transformers import SentenceTransformer
-            except ImportError as ie:
-                logger.error(f"❌ SentenceTransformer import failed: {ie}")
+            if not SENTENCE_TRANSFORMERS_AVAILABLE:
+                logger.warning("Sentence Transformers not available - cannot perform RAG search")
                 return []
             
             # Initialize SentenceTransformer model with error handling
@@ -375,4 +387,4 @@ def main():
             print(f"\n❌ Error: {e}")
 
 if __name__ == "__main__":
-    main() 
+    main()

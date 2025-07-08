@@ -41,8 +41,8 @@ Your current backend code is ready! No changes needed to the core files:
      Runtime: Python
      Branch: main
      Root Directory: (leave empty)
-     Build Command: cd Backend && chmod +x deploy.sh && ./deploy.sh
-     Start Command: cd Backend && gunicorn --bind 0.0.0.0:$PORT --timeout 120 chatbot_api:app
+     Build Command: cd Backend && pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
+     Start Command: cd Backend && python -m gunicorn --bind 0.0.0.0:$PORT --timeout 120 chatbot_api:app
      ```
 
 3. **Set Environment Variables:**
@@ -141,8 +141,8 @@ const API_BASE_URL = 'https://mosdac-chatbot-api.onrender.com';
 3. **Configure:**
    - Name: `mosdac-chatbot-api`
    - Runtime: `Python`
-   - Build: `cd Backend && chmod +x deploy.sh && ./deploy.sh`
-   - Start: `cd Backend && gunicorn --bind 0.0.0.0:$PORT --timeout 120 chatbot_api:app`
+   - Build: `cd Backend && pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir`
+   - Start: `cd Backend && python -m gunicorn --bind 0.0.0.0:$PORT --timeout 120 chatbot_api:app`
 4. **Environment Variables:**
    ```
    GEMINI_API_KEY=AIzaSyDz_C5YEYgvPOhSdY6cLe2yZBLbGfkffao
@@ -261,3 +261,44 @@ Your code is **production-ready** for manual deployment:
 
 **Backend URL:** Use this exact URL in your frontend:
 `https://mosdac-chatbot-api.onrender.com`
+
+---
+
+## 🎯 CLARIFICATION: These Steps Are For BACKEND WEB SERVICE Only
+
+The configuration update you mentioned is specifically for:
+- ✅ **Backend Web Service** (Python/Flask)
+- ❌ **NOT for Static Site** (Frontend)
+
+### 📋 STEP-BY-STEP BREAKDOWN:
+
+#### 🔧 **BACKEND (Web Service) Configuration:**
+```
+Service Type: Web Service
+Language: Python
+Build Command: cd Backend && pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
+Start Command: cd Backend && python -m gunicorn --bind 0.0.0.0:$PORT --timeout 120 chatbot_api:app
+```
+
+#### 🎨 **FRONTEND (Static Site) Configuration:**
+```
+Service Type: Static Site
+Language: Node.js (auto-detected)
+Build Command: npm install && npm run build
+Publish Directory: dist
+Root Directory: frontend2/celestial-conversations-nexus
+```
+
+---
+
+## 🚀 COMPLETE DEPLOYMENT ORDER:
+
+### Step 1: Deploy Backend Web Service FIRST
+1. **Create Web Service** with above backend configuration
+2. **Set environment variables** (Gemini API, Neo4j)
+3. **Deploy and get URL** (e.g., `https://mosdac-chatbot-api.onrender.com`)
+
+### Step 2: Deploy Frontend Static Site SECOND  
+1. **Update frontend .env** with backend URL
+2. **Create Static Site** with above frontend configuration
+3. **Deploy frontend**
