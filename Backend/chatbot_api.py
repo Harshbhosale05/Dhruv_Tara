@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
-# Update CORS to include Render domains
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:3001", "http://127.0.0.1:3001", "https://mosdac-chatbot-frontend.onrender.com", "https://*.onrender.com"]}})  # Enable CORS for all frontends
+# Enable CORS for all origins (more permissive for deployment)
+CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:3001", "http://127.0.0.1:3001", "https://mosdac-chatbot-frontend.onrender.com", "https://dhruvtara1.onrender.com"], supports_credentials=True)  # Enable CORS for all frontends
 
 # Load API key
 api_key = os.getenv("GEMINI_API_KEY", "")

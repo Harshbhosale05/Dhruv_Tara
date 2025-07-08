@@ -1,5 +1,6 @@
 // API Configuration - Production Ready
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://dhruv-tara-2.onrender.com';
+const rawApiUrl = import.meta.env.VITE_API_URL || 'https://dhruv-tara-2.onrender.com';
+export const API_BASE_URL = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 
 export const apiEndpoints = {
   chat: `${API_BASE_URL}/chat`,
