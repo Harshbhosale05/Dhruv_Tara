@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Connection Test</h1>
+    <button onclick="testAPI()">Test API Connection</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testAPI() {
+            const API_URL = 'https://dhruv-tara-2.onrender.com';
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                // Test health endpoint first
+                resultDiv.innerHTML = '<p>Testing health endpoint...</p>';
+                const healthResponse = await fetch(`${API_URL}/health`);
+                const healthData = await healthResponse.json();
+                resultDiv.innerHTML += `<p>Health: ${JSON.stringify(healthData)}</p>`;
+                
+                // Test chat endpoint with correct format
+                resultDiv.innerHTML += '<p>Testing chat endpoint...</p>';
+                const chatResponse = await fetch(`${API_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        query: 'Hello, test message',
+                        user_id: 'test_user'
+                    }),
+                });
+                
+                if (chatResponse.ok) {
+                    const chatData = await chatResponse.json();
+                    resultDiv.innerHTML += `<p>Chat: ${JSON.stringify(chatData)}</p>`;
+                } else {
+                    const errorText = await chatResponse.text();
+                    resultDiv.innerHTML += `<p>Chat Error: ${chatResponse.status} - ${errorText}</p>`;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML += `<p>Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
