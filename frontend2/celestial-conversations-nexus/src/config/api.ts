@@ -1,4 +1,4 @@
-// Create this file: frontend2/celestial-conversations-nexus/src/config/api.ts
+// API Configuration - Production Ready
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const apiEndpoints = {
@@ -6,5 +6,44 @@ export const apiEndpoints = {
   health: `${API_BASE_URL}/health`,
 };
 
-// Example usage in your components:
-// const response = await fetch(apiEndpoints.chat, { ... });
+// Fetch wrapper with error handling
+export const apiClient = {
+  async chat(message: string) {
+    try {
+      const response = await fetch(apiEndpoints.chat, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Chat API error:', error);
+      throw error;
+    }
+  },
+  
+  async healthCheck() {
+    try {
+      const response = await fetch(apiEndpoints.health);
+      return await response.json();
+    } catch (error) {
+      console.error('Health check failed:', error);
+      return { status: 'error', message: error.message };
+    }
+  }
+};
+
+// Log current configuration (only in development)
+if (import.meta.env.DEV) {
+  console.log('API Configuration:', {
+    BASE_URL: API_BASE_URL,
+    ENDPOINTS: apiEndpoints
+  });
+}
