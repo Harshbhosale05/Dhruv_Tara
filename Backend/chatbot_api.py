@@ -19,7 +19,8 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:3001", "http://127.0.0.1:3001"]}})  # Enable CORS for all frontends
+# Update CORS to include Render domains
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:3001", "http://127.0.0.1:3001", "https://mosdac-chatbot-frontend.onrender.com", "https://*.onrender.com"]}})  # Enable CORS for all frontends
 
 # Load API key
 api_key = os.getenv("GEMINI_API_KEY", "")
@@ -91,6 +92,50 @@ def system_info():
         logger.error(f"❌ Error getting system info: {e}")
         return jsonify({"error": "An error occurred while getting system info", "details": str(e)}), 500
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for monitoring"""
+    try:
+        # Check if chatbot can be initialized
+        bot = get_chatbot()
+        
+        # Check Neo4j connection
+        neo4j_status = "unknown"
+        try:
+            if hasattr(bot, 'driver') and bot.driver:
+                with bot.driver.session() as session:
+                    session.run("RETURN 1")
+                neo4j_status = "connected"
+        except Exception:
+            neo4j_status = "disconnected"
+        
+        # Check vector store
+        vector_store_status = "unknown"
+        try:
+            if hasattr(bot, 'vector_store') and bot.vector_store:
+                vector_store_status = "loaded"
+            elif os.path.exists('enhanced_vector_store'):
+                vector_store_status = "available"
+            else:
+                vector_store_status = "missing"
+        except Exception:
+            vector_store_status = "error"
+        
+        return jsonify({
+            'status': 'healthy',
+            'chatbot': 'initialized',
+            'neo4j': neo4j_status,
+            'vector_store': vector_store_status,
+            'timestamp': str(os.getpid())
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': str(os.getpid())
+        }), 500
+
 @app.route('/', methods=['GET'])
 def index():
     """
@@ -110,6 +155,11 @@ def index():
                 "path": "/system-info",
                 "method": "GET",
                 "description": "Get system information"
+            },
+            {
+                "path": "/health",
+                "method": "GET",
+                "description": "Health check endpoint"
             }
         ]
     })

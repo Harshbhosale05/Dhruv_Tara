@@ -1,5 +1,6 @@
-# Render deployment configuration
+# Render Blueprint - Deploy Frontend + Backend in one go
 services:
+  # Backend API Service
   - type: web
     name: mosdac-chatbot-api
     runtime: python
@@ -24,3 +25,22 @@ services:
         value: 0.0.0.0
       - key: API_PORT
         value: $PORT
+
+  # Frontend React App
+  - type: web
+    name: mosdac-chatbot-frontend
+    runtime: node
+    plan: free
+    buildCommand: |
+      cd frontend2/celestial-conversations-nexus
+      npm install
+      npm run build
+    startCommand: |
+      cd frontend2/celestial-conversations-nexus
+      npm run preview -- --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: mosdac-chatbot-api
+          property: host
