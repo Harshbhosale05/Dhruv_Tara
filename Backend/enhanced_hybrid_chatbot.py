@@ -24,7 +24,7 @@ class EnhancedHybridMOSDACChatbot:
         """
         Initialize the enhanced hybrid chatbot with comprehensive data
         """
-        self.base_dir = "mosdac_data"
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
         
         # Initialize components
         self.setup_vector_store()
@@ -40,7 +40,7 @@ class EnhancedHybridMOSDACChatbot:
         """Setup enhanced vector store"""
         try:
             # Load enhanced vector store
-            vector_store_dir = Path(f"{self.base_dir}/enhanced_vector_store")
+            vector_store_dir = Path(self.base_dir) / "enhanced_vector_store"
             
             # Load FAISS index
             index_path = vector_store_dir / "faiss_index.bin"
@@ -102,11 +102,25 @@ class EnhancedHybridMOSDACChatbot:
         """Search using enhanced RAG (vector search)"""
         try:
             # Use SentenceTransformer for query embedding (matching the stored embeddings)
-            from sentence_transformers import SentenceTransformer
+            try:
+                from sentence_transformers import SentenceTransformer
+            except ImportError as ie:
+                logger.error(f"❌ SentenceTransformer import failed: {ie}")
+                return []
             
-            # Initialize SentenceTransformer model
+            # Initialize SentenceTransformer model with error handling
             model_name = self.index_info.get('model_name', 'all-MiniLM-L6-v2')
-            model = SentenceTransformer(model_name)
+            try:
+                model = SentenceTransformer(model_name)
+            except Exception as model_error:
+                logger.error(f"❌ Failed to load SentenceTransformer model '{model_name}': {model_error}")
+                # Try with a simpler model as fallback
+                try:
+                    model = SentenceTransformer('all-MiniLM-L6-v2')
+                    logger.info("✅ Loaded fallback model: all-MiniLM-L6-v2")
+                except Exception as fallback_error:
+                    logger.error(f"❌ Fallback model also failed: {fallback_error}")
+                    return []
             
             # Encode query
             query_vector = model.encode([query], convert_to_tensor=False).astype('float32')
@@ -318,7 +332,7 @@ def main():
     print("=" * 50)
     
     # Use provided Gemini API key
-    api_key = "AIzaSyDKrNSwJGKbZJ9NbQtpj9b-QHUtWlpimQU"
+    api_key = "AIzaSyDz_C5YEYgvPOhSdY6cLe2yZBLbGfkffao"
     
     # Initialize chatbot
     chatbot = EnhancedHybridMOSDACChatbot(api_key)

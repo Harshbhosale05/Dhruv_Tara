@@ -20,7 +20,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:3001", "http://127.0.0.1:3001"]}})  # Enable CORS for all frontends
 
 # Load API key
-api_key = "AIzaSyDKrNSwJGKbZJ9NbQtpj9b-QHUtWlpimQU"
+api_key = "AIzaSyDz_C5YEYgvPOhSdY6cLe2yZBLbGfkffao"
 
 # Initialize chatbot
 chatbot = None
@@ -113,6 +113,11 @@ def index():
     })
 
 if __name__ == "__main__":
+    # Change to the Backend directory to ensure correct relative paths
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(backend_dir)
+    logger.info(f"Changed working directory to: {backend_dir}")
+    
     # Use environment variables for host and port if available
     host = os.getenv("API_HOST", "0.0.0.0")
     port = int(os.getenv("API_PORT", 5000))
