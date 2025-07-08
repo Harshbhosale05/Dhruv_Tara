@@ -1,0 +1,56 @@
+{
+  "test_user_001": [
+    {
+      "timestamp": "2025-07-06T20:18:57.468378",
+      "query": "What satellites monitor ocean temperature and how do they work?",
+      "answer": "Based on the provided documentation, we know that the INSAT-3D satellite has a 2-channel Sea Surface Temperature Monitor (SSTM) which is used to measure ocean temperature.  The exact workings of the SSTM aren't detailed in this document, but we know it's one of three instruments on INSAT-3D that simultaneously measure ocean parameters.  The other two are an Ocean Colour Monitor and a Scatterometer, which likely provide additional data to help refine the SST measurements.\n\nUnfortunately, the prov"
+    },
+    {
+      "timestamp": "2025-07-06T20:18:55.208739",
+      "query": "Tell me about MOSDAC's role in weather forecasting",
+      "answer": "Based on the limited information provided, MOSDAC's role in weather forecasting appears to be primarily focused on data archiving and dissemination.  The documentation highlights that MOSDAC acts as a \"Storehouse for Space based Weather and Ocean Data,\" providing \"Near Real time Meteorological and Oceanographic data dissemination.\"  This suggests that MOSDAC plays a crucial role in making satellite data readily available to those who use it for forecasting, such as meteorological agencies and re"
+    },
+    {
+      "timestamp": "2025-07-06T20:18:52.979222",
+      "query": "What is INSAT-3D and what does it do?",
+      "answer": "Based on the provided MOSDAC documentation, we know that INSAT-3D has payloads, and that data from its Imager has been used in a study on broadband Linear Spectral Analysis (LSA).  The documentation mentions this study showed that spectral information is more important than angular information for computing broadband LSA over India.\n\nUnfortunately, the provided text doesn't give a complete description of INSAT-3D's purpose or the details of its capabilities.  To provide a more comprehensive answ"
+    },
+    {
+      "timestamp": "2025-07-06T19:57:19.240184",
+      "query": "What satellites monitor ocean temperature?",
+      "answer": "📄 **From MOSDAC Documentation:**\n- a unique opportunity for simultaneously measuring the physical, biological and atmospheric parameters for the first time from three instruments, (i) 13-band advanced Ocean Colour Monitor (OCM-3), (ii)...\n- Group for Meteorological Satellites LRITHRIT Global Specifications...."
+    },
+    {
+      "timestamp": "2025-07-06T19:57:19.209008",
+      "query": "Tell me about MOSDAC",
+      "answer": "📄 **From MOSDAC Documentation:**\n- Citation This dataset may be cited as \"MOSDAC (http://www.mosdac.gov.in)\",(Sikhakolli et al., 2013)...\n- . MOSDAC is operationally supplying earth observation data from Indian meteorology and oceanography satellites, to cater to national and international research requirements. Contact Us: MOSDAC Operato..."
+    }
+  ],
+  "default_user": [
+    {
+      "timestamp": "2025-07-06T21:09:05.572085",
+      "query": "tell me station id of this station CRIDA Farm,Hayathnagar, Hyderabad",
+      "answer": "I'm sorry, but I cannot find the station ID for CRIDA Farm, Hayathnagar, Hyderabad in the provided documentation or knowledge graph.  The documentation mentions station IDs for IMD (Delhi) and BES (Bopal), but doesn't include information for other stations.  To get the station ID you are looking for, you may need to consult additional MOSDAC resources, such as their website's station directory or contact their support team directly.\n"
+    },
+    {
+      "timestamp": "2025-07-06T21:00:28.746293",
+      "query": "difference between INSAT-3D and INSAT-3DS",
+      "answer": "Based on the limited information I have access to, INSAT-3DS is essentially identical to INSAT-3D in terms of its sensors and primary functionalities.  The documentation mentions using both INSAT-3D and INSAT-3DR data in a \"staggering mode\" for deriving Atmospheric Motion Vectors (AMVs), suggesting a slight difference in data acquisition or processing methodology between INSAT-3D and INSAT-3DR (possibly relating to the 'R' signifying a revised or improved version).  However, the core sensors and"
+    },
+    {
+      "timestamp": "2025-07-06T20:58:25.058989",
+      "query": "what are the different data formats available on  mosdac.gov.in",
+      "answer": "Based on the limited documentation I have access to, MOSDAC provides data in at least a few different formats, although the specific formats aren't explicitly stated.  The provided text mentions URLs for various data feeds (e.g.,  `https://mosdac.gov.in/isrocast.xml`, `https://mosdac.gov.in/3dimager.xml`).  The `.xml` extension suggests that at least some data is available in Extensible Markup Language (XML) format.  \n\nFurther, the numbered list shows examples like `10.19038SAC103DIMG_L2B_CMK`, "
+    },
+    {
+      "timestamp": "2025-07-06T20:55:30.110375",
+      "query": "tell me differnece between insat and insat 3d",
+      "answer": "I'm accessing the available documentation on INSAT-3D.  Unfortunately, the provided text snippets only mention the existence of INSAT-3D and its payloads, without offering a direct comparison to other INSAT satellites.  The document fragment references a table (\"Table 4: Geophysical Parameters retrieved from INSAT-3D\") which would likely contain information useful for differentiating it from other INSAT satellites, but the table's contents aren't included.\n\nTherefore, I can't give you a detailed"
+    },
+    {
+      "timestamp": "2025-07-06T20:23:04.952134",
+      "query": "memory",
+      "answer": "I understand you're looking for information about ISRO satellites that provide ocean data and use infrared sensors.  Unfortunately, the provided documentation and knowledge graph don't contain a definitive answer to this question.\n\nThe documentation lists several ISRO satellites (INSAT-3D, KALPANA-1, OCEANSAT-2, OCEANSAT-3), but it doesn't specify which ones use infrared sensors for ocean data collection.  While the document mentions infrared data in the context of other observations (e.g.,  \"IN"
+    }
+  ]
+}
