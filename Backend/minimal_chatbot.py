@@ -61,8 +61,31 @@ class MinimalMOSDACChatbot:
             if self.gemini_api_key:
                 logger.info("🚀 Configuring Gemini AI...")
                 genai.configure(api_key=self.gemini_api_key)
-                self.gemini_model = genai.GenerativeModel('gemini-pro')
-                logger.info("✅ Gemini AI configured successfully")
+                
+                # Try different model names in order of preference
+                models_to_try = [
+                    'gemini-1.5-flash',
+                    'gemini-1.5-pro',  
+                    'gemini-pro',
+                    'gemini-1.0-pro'
+                ]
+                
+                self.gemini_model = None
+                for model_name in models_to_try:
+                    try:
+                        logger.info(f"🔧 Trying model: {model_name}")
+                        self.gemini_model = genai.GenerativeModel(model_name)
+                        # Test the model with a simple query
+                        test_response = self.gemini_model.generate_content("Hello")
+                        logger.info(f"✅ Gemini AI configured successfully with {model_name}")
+                        break
+                    except Exception as model_error:
+                        logger.warning(f"⚠️ Model {model_name} failed: {model_error}")
+                        continue
+                
+                if not self.gemini_model:
+                    logger.error("❌ No working Gemini model found")
+                    
             else:
                 logger.warning("⚠️ No Gemini API key provided - using fallback responses only")
                 self.gemini_model = None
