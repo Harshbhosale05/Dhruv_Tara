@@ -1,0 +1,391 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 27% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 27% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 27% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 220 27% 8%;
+
+    --secondary: 220 27% 16%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 27% 16%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 220 27% 8%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 27% 20%;
+    --input: 220 27% 16%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: radial-gradient(ellipse at top, #1a1a3e 0%, #0f0f23 50%, #0a0a1f 100%);
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 30%, #f472b6 60%, #fbbf24 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease-in-out infinite;
+  }
+  
+  .space-glow {
+    box-shadow: 0 0 30px rgba(96, 165, 250, 0.4), 0 0 60px rgba(168, 139, 250, 0.3), 0 0 100px rgba(244, 114, 182, 0.2);
+  }
+  
+  .satellite-glow {
+    box-shadow: 0 0 20px currentColor;
+  }
+  
+  .earth-glow {
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.6));
+  }
+  
+  .orbital-animation {
+    animation: orbit 20s linear infinite;
+  }
+  
+  .satellite-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .satellite-float-enhanced {
+    animation: float-enhanced 8s ease-in-out infinite;
+  }
+  
+  .satellite-spin {
+    animation: satellite-rotate 12s linear infinite;
+  }
+  
+  .nebula-drift {
+    animation: nebula-drift 25s ease-in-out infinite;
+  }
+  
+  .nebula-drift-reverse {
+    animation: nebula-drift-reverse 30s ease-in-out infinite;
+  }
+  
+  /* Enhanced Starfield */
+  .stars::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: twinkle 4s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .stars-secondary::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(1px 1px at 50px 120px, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(1px 1px at 170px 40px, rgba(168, 139, 250, 0.6), transparent),
+      radial-gradient(1px 1px at 220px 160px, rgba(244, 114, 182, 0.7), transparent);
+    background-repeat: repeat;
+    background-size: 300px 200px;
+    animation: twinkle-colored 6s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  .stars-distant::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(0.5px 0.5px at 80px 60px, rgba(255,255,255,0.3), transparent),
+      radial-gradient(0.5px 0.5px at 200px 140px, rgba(255,255,255,0.2), transparent);
+    background-repeat: repeat;
+    background-size: 400px 300px;
+    animation: twinkle-distant 8s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Shooting stars with trails */
+  .shooting-star {
+    width: 2px;
+    height: 2px;
+    background: linear-gradient(45deg, #fff, transparent);
+    border-radius: 50%;
+    position: relative;
+    animation: shoot 3s linear infinite;
+  }
+  
+  .shooting-star::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+    transform: translateX(-50px) rotate(45deg);
+  }
+  
+  /* Space dust */
+  .space-dust::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(0.5px 0.5px at 25% 25%, rgba(96, 165, 250, 0.1), transparent),
+      radial-gradient(0.5px 0.5px at 75% 75%, rgba(168, 139, 250, 0.1), transparent);
+    background-size: 100px 100px;
+    animation: dust-drift 20s linear infinite;
+    pointer-events: none;
+  }
+  
+  /* Cosmic radiation */
+  .cosmic-rays::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      linear-gradient(0deg, transparent 49%, rgba(96, 165, 250, 0.03) 50%, transparent 51%),
+      linear-gradient(90deg, transparent 49%, rgba(168, 139, 250, 0.03) 50%, transparent 51%);
+    background-size: 100px 100px;
+    animation: cosmic-pulse 15s ease-in-out infinite;
+    pointer-events: none;
+  }
+  
+  /* Signal waves */
+  .signal-wave {
+    color: inherit;
+  }
+  
+  /* Data transmission beams */
+  .data-beam {
+    position: absolute;
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    animation: data-transmission 2s ease-in-out infinite;
+  }
+  
+  .data-beam-1 {
+    top: -2px;
+    left: 10px;
+    transform: rotate(30deg);
+  }
+  
+  .data-beam-2 {
+    top: 2px;
+    left: 10px;
+    transform: rotate(-30deg);
+    animation-delay: 0.5s;
+  }
+  
+  .data-beam-3 {
+    top: 0;
+    left: 10px;
+    animation-delay: 1s;
+  }
+  
+  /* Animation keyframes */
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  @keyframes orbit {
+    from {
+      transform: rotate(0deg) translateX(150px) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateX(150px) rotate(-360deg);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-10px) rotate(2deg);
+    }
+    50% {
+      transform: translateY(-5px) rotate(0deg);
+    }
+    75% {
+      transform: translateY(-15px) rotate(-2deg);
+    }
+  }
+  
+  @keyframes float-enhanced {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    25% {
+      transform: translateY(-12px) rotate(3deg) scale(1.05);
+    }
+    50% {
+      transform: translateY(-6px) rotate(0deg) scale(1);
+    }
+    75% {
+      transform: translateY(-18px) rotate(-3deg) scale(0.95);
+    }
+  }
+  
+  @keyframes satellite-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes nebula-drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -10px) scale(1.1); }
+    66% { transform: translate(-15px, 15px) scale(0.9); }
+  }
+  
+  @keyframes nebula-drift-reverse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-20px, 10px) scale(0.9); }
+    66% { transform: translate(15px, -15px) scale(1.1); }
+  }
+  
+  @keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes twinkle-colored {
+    0% { opacity: 0.2; }
+    100% { opacity: 0.8; }
+  }
+  
+  @keyframes twinkle-distant {
+    0% { opacity: 0.1; }
+    100% { opacity: 0.4; }
+  }
+  
+  @keyframes shoot {
+    0% {
+      transform: translateX(-100px) translateY(100px);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100px) translateY(-100px);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes dust-drift {
+    from { transform: translateX(-100px); }
+    to { transform: translateX(100px); }
+  }
+  
+  @keyframes cosmic-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  @keyframes data-transmission {
+    0%, 100% { opacity: 0; transform: scaleX(0); }
+    50% { opacity: 1; transform: scaleX(1); }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(96, 165, 250, 0.8), 0 0 60px rgba(168, 139, 250, 0.4);
+    }
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.8s ease-out;
+  }
+}
