@@ -286,12 +286,78 @@ CORS(app, origins=['https://your-frontend-domain.com'])
 4. **Update your code** to use environment variables
 5. **Deploy and test**
 
-## 🔗 Useful Links
+---
 
-- [Render Documentation](https://render.com/docs)
-- [Neo4j AuraDB](https://neo4j.com/cloud/aura/)
-- [Pinecone](https://www.pinecone.io/)
-- [Railway](https://railway.app/)
-- [Google Cloud Run](https://cloud.google.com/run)
+## 🎯 Troubleshooting Common Issues
 
-Let me know which option you'd like to proceed with, and I can help you set it up step by step!
+### Backend Issues:
+1. **Build timeout:** Reduce dependencies or upgrade to paid plan
+2. **Memory issues:** Use lighter AI models
+3. **Neo4j connection:** Check AuraDB status and credentials
+4. **Vector store missing:** Verify faiss_cloud_manager.py setup
+
+### Frontend Issues:
+1. **Build fails:** Check Node.js version (use 18+)
+2. **API connection:** Verify VITE_API_URL is correct
+3. **CORS errors:** Ensure backend allows frontend domain
+
+### Vector Store Issues:
+1. **GitHub download fails:** Make repo public or use access token
+2. **File too large:** Use GitHub LFS or alternative hosting
+3. **FAISS rebuild:** May take 5-10 minutes on first run
+
+---
+
+## 📊 Expected Deployment Times
+
+### Blueprint Method:
+- **Setup:** 2 minutes
+- **Backend build:** 10-15 minutes
+- **Frontend build:** 5-10 minutes
+- **Total:** ~20 minutes
+
+### Manual Method:
+- **Backend:** 15-20 minutes
+- **Frontend:** 10-15 minutes
+- **Total:** ~30 minutes
+
+---
+
+## 🔗 Final URLs
+
+After successful deployment:
+- **Frontend:** https://mosdac-chatbot-frontend.onrender.com
+- **Backend API:** https://mosdac-chatbot-api.onrender.com
+- **Health Check:** https://mosdac-chatbot-api.onrender.com/health
+
+---
+
+## 💡 Pro Tips
+
+1. **Free Tier Limitations:**
+   - Services sleep after 15 minutes of inactivity
+   - Cold start takes 30-60 seconds
+   - 750 hours/month limit per service
+
+2. **Performance Optimization:**
+   - Use paid plan for production ($7/month per service)
+   - Enable persistent storage for faster restarts
+   - Use CDN for static assets
+
+3. **Monitoring:**
+   - Check logs in Render dashboard
+   - Set up uptime monitoring
+   - Use health check endpoint
+
+4. **Security:**
+   - Rotate API keys regularly
+   - Use environment variables
+   - Enable HTTPS (automatic on Render)
+
+## 🚀 You're Ready to Deploy!
+
+Choose your method:
+- **Quick & Easy:** Use Blueprint Method
+- **More Control:** Use Manual Method
+
+Both will give you a fully functional chatbot deployment! 🎉
