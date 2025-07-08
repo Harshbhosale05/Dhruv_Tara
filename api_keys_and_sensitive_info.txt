@@ -1,0 +1,64 @@
+API Keys and Sensitive Information Found in the Project
+=========================================================
+
+GEMINI API KEYS:
+1. AIzaSyDz_C5YEYgvPOhSdY6cLe2yZBLbGfkffao
+   - Found in: Backend/enhanced_hybrid_chatbot.py (line 335)
+   - Found in: Backend/chatbot_api.py (line 23)
+   - Usage: Google Gemini AI API
+
+2. AIzaSyDKrNSwJGKbZJ9NbQtpj9b-QHUtWlpimQU
+   - Found in: Backend/data_processor.py (line 226)
+   - Found in: Backend/comprehensive_data_processor.py (line 293)
+   - Usage: Google Gemini AI API
+
+NEO4J DATABASE PASSWORDS:
+1. Hbhosale@05
+   - Found in: Backend/enhanced_hybrid_chatbot.py (line 71)
+   - Found in: Backend/import_to_neo4j.py (line 210)
+   - Found in: Backend/data_processor.py (line 224)
+   - Found in: Backend/comprehensive_data_processor.py (line 291)
+   - Usage: Neo4j database authentication
+
+DEFAULT PASSWORDS (Development/Testing):
+1. password
+   - Found in: Backend/import_to_neo4j.py (line 12)
+   - Usage: Default Neo4j password parameter
+
+SECURITY RECOMMENDATIONS:
+===========================
+1. Move all API keys to environment variables or a .env file
+2. Never commit actual API keys to version control
+3. Use placeholder values in code and load from environment variables
+4. Consider using a secrets management service for production
+5. Rotate the exposed API keys immediately
+6. Add .env to .gitignore file
+7. Use different API keys for development, staging, and production environments
+
+EXAMPLE .ENV FILE STRUCTURE:
+============================
+GEMINI_API_KEY_1=your_api_key_here
+GEMINI_API_KEY_2=your_api_key_here
+NEO4J_PASSWORD=your_password_here
+NEO4J_URI=neo4j://127.0.0.1:7687
+NEO4J_USER=neo4j
+
+ENVIRONMENT FILE FOUND:
+=======================
+- Backend/.env file contains:
+  * GEMINI_API_KEY=AIzaSyDz_C5YEYgvPOhSdY6cLe2yZBLbGfkffao
+  * NEO4J_PASSWORD=Hbhosale@05
+  * NEO4J_URI=neo4j://127.0.0.1:7687
+  * NEO4J_USER=neo4j
+  * API_HOST=0.0.0.0
+  * API_PORT=5000
+
+FILES TO UPDATE:
+================
+- Backend/enhanced_hybrid_chatbot.py
+- Backend/chatbot_api.py
+- Backend/data_processor.py
+- Backend/comprehensive_data_processor.py
+- Backend/import_to_neo4j.py
+
+NOTE: These API keys and passwords are now exposed and should be rotated immediately for security purposes.

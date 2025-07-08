@@ -10,6 +10,8 @@ import shutil
 import logging
 from pathlib import Path
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
@@ -219,11 +221,11 @@ class DataProcessor:
         config = {
             'vector_store_path': 'final_vector_store',
             'neo4j_connection': {
-                'uri': 'neo4j://127.0.0.1:7687',
-                'user': 'neo4j',
-                'password': 'Hbhosale@05'
+                'uri': os.getenv('NEO4J_URI', 'neo4j://127.0.0.1:7687'),
+                'user': os.getenv('NEO4J_USER', 'neo4j'),
+                'password': os.getenv('NEO4J_PASSWORD', 'Hbhosale@05')
             },
-            'gemini_api_key': 'AIzaSyDKrNSwJGKbZJ9NbQtpj9b-QHUtWlpimQU',
+            'gemini_api_key': os.getenv('GEMINI_API_KEY', ''),
             'data_sources': {
                 'text_files': text_count,
                 'pdf_files': pdf_count,

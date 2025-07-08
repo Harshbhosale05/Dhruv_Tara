@@ -10,6 +10,8 @@ import os
 import logging
 import json
 from enhanced_hybrid_chatbot import EnhancedHybridMOSDACChatbot
+from dotenv import load_dotenv
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -20,7 +22,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:3001", "http://127.0.0.1:3001"]}})  # Enable CORS for all frontends
 
 # Load API key
-api_key = "AIzaSyDz_C5YEYgvPOhSdY6cLe2yZBLbGfkffao"
+api_key = os.getenv("GEMINI_API_KEY", "")
 
 # Initialize chatbot
 chatbot = None

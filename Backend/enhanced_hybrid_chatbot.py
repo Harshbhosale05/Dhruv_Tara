@@ -66,9 +66,9 @@ class EnhancedHybridMOSDACChatbot:
         """Setup Neo4j connection"""
         try:
             # Neo4j connection details
-            uri = "neo4j://127.0.0.1:7687"
-            username = "neo4j"
-            password = "Hbhosale@05"
+            uri = os.getenv("NEO4J_URI", "neo4j://127.0.0.1:7687")
+            username = os.getenv("NEO4J_USER", "neo4j")
+            password = os.getenv("NEO4J_PASSWORD", "Hbhosale@05")
             
             self.driver = GraphDatabase.driver(uri, auth=(username, password))
             
@@ -85,6 +85,8 @@ class EnhancedHybridMOSDACChatbot:
     def setup_gemini(self, api_key: str = None):
         """Setup Gemini LLM"""
         try:
+            if not api_key:
+                api_key = os.getenv("GEMINI_API_KEY", "")
             if api_key:
                 genai.configure(api_key=api_key)
                 self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')

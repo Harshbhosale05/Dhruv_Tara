@@ -3,16 +3,21 @@ from neo4j import GraphDatabase
 import logging
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class MOSDACNeo4jImporter:
-    def __init__(self, uri="neo4j://127.0.0.1:7687", user="neo4j", password="password"):
+    def __init__(self, uri=None, user=None, password=None):
         """
         Initialize Neo4j connection for MOSDAC data
         """
+        uri = uri or os.getenv("NEO4J_URI", "neo4j://127.0.0.1:7687")
+        user = user or os.getenv("NEO4J_USER", "neo4j")
+        password = password or os.getenv("NEO4J_PASSWORD", "Hbhosale@05")
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
         logger.info(f"🔗 Connected to Neo4j at {uri}")
     
@@ -205,9 +210,9 @@ def main():
     Main function to import triples into Neo4j
     """
     # Neo4j connection parameters for your setup
-    NEO4J_URI = "neo4j://127.0.0.1:7687"
-    NEO4J_USER = "neo4j"
-    NEO4J_PASSWORD = "Hbhosale@05"  # Your actual password
+    NEO4J_URI = os.getenv("NEO4J_URI", "neo4j://127.0.0.1:7687")
+    NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+    NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "Hbhosale@05")
     
     # CSV file path
     csv_file = Path("mosdac_data/triples.csv")
