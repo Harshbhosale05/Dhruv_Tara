@@ -107,6 +107,17 @@ class MinimalMOSDACChatbot:
             logger.error(f"Neo4j query error: {e}")
             return "Database query encountered an issue."
 
+    def chat(self, query: str, user_id: str = "default_user") -> str:
+        """
+        Chat method that matches the API interface
+        """
+        try:
+            response_data = self.generate_response(query)
+            return response_data.get('response', 'Sorry, I encountered an error.')
+        except Exception as e:
+            logger.error(f"Chat error: {e}")
+            return "I apologize, but I'm having trouble processing your request right now."
+
     def generate_response(self, user_message: str) -> Dict[str, Any]:
         """
         Generate response using available methods

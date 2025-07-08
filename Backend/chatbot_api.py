@@ -24,6 +24,8 @@ CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://loc
 
 # Load API key
 api_key = os.getenv("GEMINI_API_KEY", "")
+if not api_key:
+    logger.warning("⚠️ GEMINI_API_KEY not found in environment variables. Chatbot will use fallback responses.")
 
 # Initialize chatbot
 chatbot = None
@@ -64,9 +66,15 @@ def chat():
         
         # Process query
         logger.info(f"Processing chat request: {query}")
-        response = chatbot.chat(query, user_id)
-        
-        return jsonify({"response": response})
+        try:
+            response = chatbot.chat(query, user_id)
+            logger.info(f"Chat response generated successfully")
+            return jsonify({"response": response})
+        except Exception as chat_error:
+            logger.error(f"❌ Chat processing error: {chat_error}")
+            # Return a fallback response instead of failing
+            fallback_response = "I apologize, but I'm experiencing some technical difficulties. Please try again later."
+            return jsonify({"response": fallback_response, "status": "fallback"})
         
     except Exception as e:
         logger.error(f"❌ Error processing chat request: {e}")
