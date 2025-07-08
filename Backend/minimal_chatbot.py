@@ -52,6 +52,10 @@ class MinimalMOSDACChatbot:
             "gslv": "Geosynchronous Satellite Launch Vehicle (GSLV) is designed for launching heavier satellites into geostationary orbit."
         }
         
+        # Setup sample data if Neo4j is available
+        if self.driver:
+            self.setup_sample_data()
+        
         logger.info("✅ Minimal MOSDAC Chatbot initialized successfully")
 
     def setup_gemini(self):
@@ -95,11 +99,11 @@ class MinimalMOSDACChatbot:
 
     def setup_neo4j(self):
         """Setup Neo4j connection with error handling"""
-        # Skip Neo4j setup for minimal deployment
+        # Check if Neo4j is enabled
         neo4j_enabled = os.getenv('NEO4J_ENABLED', 'false').lower() == 'true'
         
         if not neo4j_enabled:
-            logger.info("ℹ️ Neo4j disabled for minimal deployment")
+            logger.info("ℹ️ Neo4j disabled - set NEO4J_ENABLED=true to enable")
             self.driver = None
             return
             
@@ -108,16 +112,32 @@ class MinimalMOSDACChatbot:
             neo4j_user = os.getenv('NEO4J_USER', 'neo4j')
             neo4j_password = os.getenv('NEO4J_PASSWORD', 'password')
             
+            if not neo4j_password or neo4j_password == 'password':
+                logger.warning("⚠️ Neo4j password not set properly - check NEO4J_PASSWORD environment variable")
+            
             logger.info(f"🔌 Attempting Neo4j connection to: {neo4j_uri}")
-            self.driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+            logger.info(f"🔑 Using username: {neo4j_user}")
+            
+            # Create driver with proper configuration for cloud databases
+            self.driver = GraphDatabase.driver(
+                neo4j_uri, 
+                auth=(neo4j_user, neo4j_password),
+                encrypted=True,  # Enable encryption for cloud databases
+                trust=True       # Trust the server certificate
+            )
             
             # Test connection
             with self.driver.session() as session:
-                session.run("RETURN 1")
+                result = session.run("RETURN 1 as test")
+                test_value = result.single()["test"]
+                if test_value == 1:
+                    logger.info("✅ Neo4j connected successfully")
+                else:
+                    raise Exception("Connection test failed")
             
-            logger.info("✅ Neo4j connected successfully")
         except Exception as e:
-            logger.warning(f"⚠️ Neo4j connection failed: {e}")
+            logger.error(f"❌ Neo4j connection failed: {e}")
+            logger.info("💡 Make sure to set NEO4J_URI, NEO4J_USER, and NEO4J_PASSWORD environment variables")
             self.driver = None
 
     def simple_keyword_search(self, query: str) -> str:
@@ -143,21 +163,69 @@ class MinimalMOSDACChatbot:
         
         try:
             with self.driver.session() as session:
-                # Simple query to get some data
-                result = session.run(
-                    "MATCH (n) WHERE toLower(n.name) CONTAINS toLower($query) OR toLower(n.description) CONTAINS toLower($query) RETURN n LIMIT 3",
-                    query=query
-                )
+                # First, try to find nodes with specific properties
+                result = session.run("""
+                    MATCH (n)
+                    WHERE toLower(toString(n.name)) CONTAINS toLower($query)
+                    OR toLower(toString(n.description)) CONTAINS toLower($query)
+                    OR toLower(toString(n.type)) CONTAINS toLower($query)
+                    RETURN n.name as name, n.description as description, n.type as type, labels(n) as labels
+                    LIMIT 5
+                """, query=query)
                 
-                records = [record["n"] for record in result]
+                records = []
+                for record in result:
+                    records.append({
+                        'name': record.get('name', 'Unknown'),
+                        'description': record.get('description', 'No description'),
+                        'type': record.get('type', 'Unknown'),
+                        'labels': record.get('labels', [])
+                    })
+                
                 if records:
-                    return f"Found {len(records)} relevant items in the database."
+                    response = f"Found {len(records)} relevant items in Neo4j database:\n"
+                    for i, record in enumerate(records, 1):
+                        response += f"{i}. {record['name']} ({record['type']}): {record['description']}\n"
+                    return response
                 else:
                     return "No specific database records found for your query."
                     
         except Exception as e:
             logger.error(f"Neo4j query error: {e}")
             return "Database query encountered an issue."
+
+    def setup_sample_data(self):
+        """Setup sample MOSDAC/ISRO data in Neo4j"""
+        if not self.driver:
+            logger.info("ℹ️ Skipping sample data setup - Neo4j not available")
+            return
+        
+        try:
+            with self.driver.session() as session:
+                # Create sample MOSDAC and ISRO data
+                session.run("""
+                    MERGE (mosdac:Organization {name: 'MOSDAC', type: 'Data Center'})
+                    SET mosdac.description = 'Meteorological & Oceanographic Satellite Data Archival Centre'
+                    
+                    MERGE (isro:Organization {name: 'ISRO', type: 'Space Agency'})
+                    SET isro.description = 'Indian Space Research Organisation'
+                    
+                    MERGE (insat3d:Satellite {name: 'INSAT-3D', type: 'Meteorological Satellite'})
+                    SET insat3d.description = 'Advanced meteorological satellite launched in 2013'
+                    
+                    MERGE (insat3ds:Satellite {name: 'INSAT-3DS', type: 'Meteorological Satellite'})
+                    SET insat3ds.description = 'Next-generation meteorological satellite launched in 2024'
+                    
+                    MERGE (mosdac)-[:MANAGES]->(insat3d)
+                    MERGE (mosdac)-[:MANAGES]->(insat3ds)
+                    MERGE (isro)-[:OPERATES]->(insat3d)
+                    MERGE (isro)-[:OPERATES]->(insat3ds)
+                """)
+                
+                logger.info("✅ Sample data setup completed in Neo4j")
+                
+        except Exception as e:
+            logger.error(f"❌ Failed to setup sample data: {e}")
 
     def chat(self, query: str, user_id: str = "default_user") -> str:
         """
