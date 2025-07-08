@@ -32,12 +32,24 @@ class MinimalMOSDACChatbot:
         # Initialize Neo4j (optional - with error handling)
         self.setup_neo4j()
         
-        # Basic knowledge base
+        # Enhanced knowledge base with detailed ISRO satellite information
         self.knowledge_base = {
             "mosdac": "MOSDAC (Meteorological & Oceanographic Satellite Data Archival Centre) is ISRO's facility for satellite data archival and distribution.",
             "isro": "Indian Space Research Organisation (ISRO) is India's national space agency.",
             "satellite": "ISRO operates various satellites for Earth observation, communication, and navigation.",
-            "data": "MOSDAC provides access to meteorological and oceanographic satellite data for research and applications."
+            "data": "MOSDAC provides access to meteorological and oceanographic satellite data for research and applications.",
+            "insat": "INSAT (Indian National Satellite) is a series of multipurpose geostationary satellites for telecommunications, broadcasting, meteorology, and search and rescue operations.",
+            "insat-3d": "INSAT-3D launched in 2013, provides advanced meteorological observations with a 6-channel imager and 19-channel sounder for weather forecasting and disaster management.",
+            "insat-3ds": "INSAT-3DS launched in 2024, is an advanced meteorological satellite with improved imaging capabilities, better temporal resolution, and enhanced data products for weather monitoring.",
+            "gsat": "GSAT (Geosynchronous Satellite) series provides communication services across India with various transponder configurations.",
+            "cartosat": "CARTOSAT series provides high-resolution Earth observation data for cartographic applications, urban planning, and infrastructure development.",
+            "resourcesat": "RESOURCESAT series provides multispectral imagery for natural resource management, agriculture, and environmental monitoring.",
+            "oceansat": "OCEANSAT series monitors ocean color, sea surface temperature, and coastal applications.",
+            "chandrayaan": "India's lunar exploration missions - Chandrayaan-1 (2008) and Chandrayaan-2 (2019) studied lunar surface and composition.",
+            "mangalyaan": "Mars Orbiter Mission (MOM) successfully entered Mars orbit in 2014, making India the first country to succeed in Mars mission on first attempt.",
+            "aditya": "Aditya-L1 is India's first solar mission to study the Sun's corona and solar wind.",
+            "pslv": "Polar Satellite Launch Vehicle (PSLV) is ISRO's reliable workhorse for launching satellites into polar and Sun-synchronous orbits.",
+            "gslv": "Geosynchronous Satellite Launch Vehicle (GSLV) is designed for launching heavier satellites into geostationary orbit."
         }
         
         logger.info("✅ Minimal MOSDAC Chatbot initialized successfully")
@@ -45,12 +57,14 @@ class MinimalMOSDACChatbot:
     def setup_gemini(self):
         """Setup Google Gemini AI"""
         try:
+            logger.info(f"🔑 Gemini API key provided: {bool(self.gemini_api_key)}")
             if self.gemini_api_key:
+                logger.info("🚀 Configuring Gemini AI...")
                 genai.configure(api_key=self.gemini_api_key)
                 self.gemini_model = genai.GenerativeModel('gemini-pro')
                 logger.info("✅ Gemini AI configured successfully")
             else:
-                logger.warning("⚠️ No Gemini API key provided")
+                logger.warning("⚠️ No Gemini API key provided - using fallback responses only")
                 self.gemini_model = None
         except Exception as e:
             logger.error(f"❌ Failed to setup Gemini: {e}")
@@ -75,14 +89,20 @@ class MinimalMOSDACChatbot:
             self.driver = None
 
     def simple_keyword_search(self, query: str) -> str:
-        """Simple keyword-based search in knowledge base"""
+        """Enhanced keyword-based search in knowledge base"""
         query_lower = query.lower()
         
+        # Check for multiple keywords and return most relevant
+        matched_keywords = []
         for keyword, info in self.knowledge_base.items():
             if keyword in query_lower:
-                return f"Based on our knowledge base: {info}"
+                matched_keywords.append((keyword, info))
         
-        return "I found some general information that might help you."
+        if matched_keywords:
+            # Return information from the most relevant keyword
+            return f"Knowledge base match: {matched_keywords[0][1]}"
+        
+        return "Searching in knowledge base for relevant information."
 
     def get_neo4j_data(self, query: str) -> str:
         """Get relevant data from Neo4j if available"""
@@ -123,6 +143,9 @@ class MinimalMOSDACChatbot:
         Generate response using available methods
         """
         try:
+            logger.info(f"🔄 Processing query: {user_message}")
+            logger.info(f"📱 Gemini model available: {self.gemini_model is not None}")
+            
             # Get context from different sources
             keyword_context = self.simple_keyword_search(user_message)
             db_context = self.get_neo4j_data(user_message)
@@ -144,12 +167,15 @@ class MinimalMOSDACChatbot:
             # Generate response with Gemini or fallback
             if self.gemini_model:
                 try:
+                    logger.info("🤖 Using Gemini AI for response generation")
                     response = self.gemini_model.generate_content(context)
                     ai_response = response.text
+                    logger.info("✅ Gemini AI response generated successfully")
                 except Exception as e:
-                    logger.error(f"Gemini generation error: {e}")
+                    logger.error(f"❌ Gemini generation error: {e}")
                     ai_response = self.fallback_response(user_message)
             else:
+                logger.warning("⚠️ Gemini model not available, using fallback")
                 ai_response = self.fallback_response(user_message)
             
             return {
@@ -168,40 +194,111 @@ class MinimalMOSDACChatbot:
             }
 
     def fallback_response(self, user_message: str) -> str:
-        """Fallback response when AI is not available"""
+        """Enhanced fallback response with specific knowledge"""
         
-        # Simple keyword-based responses
         query_lower = user_message.lower()
         
-        if any(word in query_lower for word in ['mosdac', 'data', 'satellite']):
-            return """MOSDAC (Meteorological & Oceanographic Satellite Data Archival Centre) is ISRO's facility that provides:
+        # Check for specific satellite comparisons
+        if 'insat' in query_lower and ('3d' in query_lower or '3ds' in query_lower):
+            if 'difference' in query_lower or 'diff' in query_lower or 'between' in query_lower:
+                return """🛰️ **INSAT-3D vs INSAT-3DS Comparison:**
+
+**INSAT-3D (2013):**
+• 6-channel imager for visible and infrared imagery
+• 19-channel sounder for atmospheric profiling
+• Hourly full disk imaging capability
+• Data relay for weather buoys and stations
+• Search and rescue transponder
+
+**INSAT-3DS (2024):**
+• Advanced 6-channel imager with improved resolution
+• Enhanced 19-channel sounder with better accuracy
+• 15-minute rapid scan capability for severe weather
+• Advanced data products for nowcasting
+• Better temporal resolution for real-time monitoring
+• Improved disaster management support
+
+**Key Differences:**
+✅ INSAT-3DS has faster imaging (15-min vs 1-hour)
+✅ Better spatial and temporal resolution
+✅ Enhanced weather prediction capabilities
+✅ More advanced data processing algorithms"""
+        
+        # Check for specific satellite information
+        for keyword, info in self.knowledge_base.items():
+            if keyword in query_lower:
+                return f"📡 **{keyword.upper()} Information:**\n\n{info}"
+        
+        # Check for general categories
+        if any(word in query_lower for word in ['mosdac', 'data', 'archival']):
+            return """🏢 **MOSDAC (Meteorological & Oceanographic Satellite Data Archival Centre):**
+
+MOSDAC is ISRO's premier facility that provides:
+
+🛰️ **Satellite Data Services:**
+• Real-time and archived satellite data
+• Data from Indian satellites (INSAT, SCATSAT, OCEANSAT)
+• International satellite data partnerships
+
+📊 **Data Products:**
+• Meteorological products for weather forecasting
+• Oceanographic data for marine applications
+• Climate datasets for research
+• Specialized products for agriculture and disaster management
+
+🌍 **Access Methods:**
+• Online data portal (mosdac.gov.in)
+• FTP services for bulk data
+• API access for developers
+• Custom data processing services"""
             
-            🛰️ Satellite data from various Indian and international satellites
-            📊 Meteorological and oceanographic datasets
-            🌍 Earth observation data for research and applications
-            📈 Data products for weather forecasting and climate studies
-            
-            You can access data through the MOSDAC portal for research and commercial purposes."""
-            
-        elif any(word in query_lower for word in ['isro', 'space', 'launch']):
-            return """ISRO (Indian Space Research Organisation) is India's national space agency that:
-            
-            🚀 Develops and launches satellites
-            🌌 Conducts space exploration missions
-            🛰️ Operates Earth observation satellites
-            📡 Provides satellite-based services
-            
-            ISRO has achieved remarkable milestones including Mars Orbiter Mission and Chandrayaan lunar missions."""
+        elif any(word in query_lower for word in ['isro', 'space', 'launch', 'mission']):
+            return """🚀 **ISRO (Indian Space Research Organisation):**
+
+India's national space agency with remarkable achievements:
+
+🛰️ **Satellite Programs:**
+• INSAT series - Communication & meteorology
+• CARTOSAT series - Earth observation
+• RESOURCESAT series - Natural resource monitoring
+• OCEANSAT series - Ocean studies
+
+🌌 **Major Missions:**
+• Mars Orbiter Mission (Mangalyaan) - 2014
+• Chandrayaan-1 & 2 - Lunar exploration
+• Aditya-L1 - Solar mission
+• Upcoming: Chandrayaan-3, Gaganyaan (human spaceflight)
+
+🚀 **Launch Vehicles:**
+• PSLV - Polar Satellite Launch Vehicle
+• GSLV - Geosynchronous Satellite Launch Vehicle
+• GSLV Mark III - Heavy-lift capability"""
             
         else:
-            return """I'm here to help you with information about:
-            
-            🛰️ MOSDAC satellite data and services
-            🚀 ISRO missions and satellites
-            🌍 Earth observation and remote sensing
-            📊 Meteorological and oceanographic data
-            
-            Please feel free to ask specific questions about these topics!"""
+            return """🤖 **Dhruv_Tara Mission Control** - I can help you with:
+
+🛰️ **MOSDAC Satellite Data:**
+• Data access and products
+• Satellite specifications
+• Data processing services
+
+🚀 **ISRO Missions:**
+• Satellite programs (INSAT, CARTOSAT, etc.)
+• Space missions (Mars, Moon, Sun)
+• Launch vehicle information
+
+🌍 **Earth Observation:**
+• Remote sensing applications
+• Weather and climate data
+• Ocean and atmospheric studies
+
+**Example Questions:**
+• "What is the difference between INSAT-3D and INSAT-3DS?"
+• "How can I access MOSDAC data?"
+• "Tell me about ISRO's Mars mission"
+• "What are the features of CARTOSAT satellites?"
+
+Please feel free to ask specific questions about these topics!"""
 
     def close(self):
         """Clean up resources"""
