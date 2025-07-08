@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Satellite, Earth, Moon, Sun, Rocket, Radio, Activity } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { apiClient } from '@/config/api';
 
 interface Message {
   id: string;
@@ -46,26 +47,7 @@ const ChatBot = () => {
       // Send query to backend API
       console.log('Sending query to backend:', currentQuery);
       
-      const response = await fetch('http://localhost:5000/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: currentQuery,
-          user_id: 'frontend_user'
-        }),
-      });
-
-      console.log('Response status:', response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Backend error response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
+      const data = await apiClient.chat(currentQuery);
       console.log('Backend response:', data);
       
       const botResponse: Message = {

@@ -15,7 +15,10 @@ export const apiClient = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ 
+          query: message,
+          user_id: 'frontend_user' 
+        }),
       });
       
       if (!response.ok) {
