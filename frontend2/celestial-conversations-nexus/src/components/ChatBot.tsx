@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Satellite, Earth, Moon, Sun, Rocket, Radio, Activity } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { apiClient } from '@/config/api';
+import { apiClient, API_BASE_URL } from '@/config/api';
 
 interface Message {
   id: string;
@@ -65,7 +65,7 @@ const ChatBot = () => {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `🚨 **Connection Error**\n\nCouldn't reach Mission Control at http://localhost:5000\n\n**Details:** ${errorMessage}\n\n**Troubleshooting:**\n• Ensure the backend server is running\n• Check if the API is accessible at http://localhost:5000/chat\n• Verify CORS settings allow requests from this frontend`,
+        text: `🚨 **Connection Error**\n\nCouldn't reach Mission Control at ${API_BASE_URL}\n\n**Details:** ${errorMessage}\n\n**Troubleshooting:**\n• Ensure the backend server is running\n• Check if the API is accessible at ${API_BASE_URL}/chat\n• Verify CORS settings allow requests from this frontend`,
         sender: 'bot',
         timestamp: new Date()
       };
