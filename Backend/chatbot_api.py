@@ -9,7 +9,7 @@ from flask_cors import CORS
 import os
 import logging
 import json
-from enhanced_hybrid_chatbot import EnhancedHybridMOSDACChatbot
+from minimal_chatbot import MinimalMOSDACChatbot
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -34,7 +34,7 @@ def get_chatbot():
     if chatbot is None:
         try:
             logger.info("Initializing chatbot...")
-            chatbot = EnhancedHybridMOSDACChatbot(api_key)
+            chatbot = MinimalMOSDACChatbot(api_key)
             logger.info("✅ Chatbot initialized successfully")
         except Exception as e:
             logger.error(f"❌ Failed to initialize chatbot: {e}")

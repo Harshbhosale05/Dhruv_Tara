@@ -41,7 +41,7 @@ Your current backend code is ready! No changes needed to the core files:
      Runtime: Python
      Branch: main
      Root Directory: (leave empty)
-     Build Command: cd Backend && pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
+     Build Command: cd Backend && pip install flask flask-cors gunicorn python-dotenv requests neo4j google-generativeai numpy faiss-cpu
      Start Command: cd Backend && python -m gunicorn --bind 0.0.0.0:$PORT --timeout 120 chatbot_api:app
      ```
 
@@ -141,7 +141,7 @@ const API_BASE_URL = 'https://mosdac-chatbot-api.onrender.com';
 3. **Configure:**
    - Name: `mosdac-chatbot-api`
    - Runtime: `Python`
-   - Build: `cd Backend && pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir`
+   - Build: `cd Backend && pip install flask flask-cors gunicorn python-dotenv requests neo4j google-generativeai numpy faiss-cpu`
    - Start: `cd Backend && python -m gunicorn --bind 0.0.0.0:$PORT --timeout 120 chatbot_api:app`
 4. **Environment Variables:**
    ```
